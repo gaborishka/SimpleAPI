@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\DTOs\SubmissionDTO;
 use App\Models\Submission;
 use App\Events\SubmissionSaved;
 use Illuminate\Bus\Queueable;
@@ -14,16 +15,21 @@ class ProcessSubmissionJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    protected $data;
+    protected SubmissionDTO $submissionDTO;
 
-    public function __construct($data)
+    public function __construct(SubmissionDTO $submissionDTO)
     {
-        $this->data = $data;
+        $this->submissionDTO = $submissionDTO;
     }
 
-    public function handle()
+    public function handle(): void
     {
-        $submission = Submission::create($this->data);
+        $submission = Submission::create([
+            'name'    => $this->submissionDTO->name,
+            'email'   => $this->submissionDTO->email,
+            'message' => $this->submissionDTO->message,
+        ]);
+
         event(new SubmissionSaved($submission));
     }
 }

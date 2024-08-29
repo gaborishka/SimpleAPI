@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\DTOs\SubmissionDTO;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreSubmissionRequest extends FormRequest
@@ -24,5 +25,15 @@ class StoreSubmissionRequest extends FormRequest
             'email' => 'required|string|email|max:255',
             'message' => 'required|string',
         ];
+    }
+
+    public function toDTO(): SubmissionDTO
+    {
+        $data = $this->validated();
+        return new SubmissionDTO(
+            $data['name'],
+            $data['email'],
+            $data['message']
+        );
     }
 }

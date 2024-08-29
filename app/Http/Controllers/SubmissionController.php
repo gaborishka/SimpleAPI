@@ -10,8 +10,7 @@ class SubmissionController extends Controller
 {
     public function store(StoreSubmissionRequest $request): JsonResponse
     {
-        $data = $request->validated();
-        ProcessSubmissionJob::dispatch($data);
+        ProcessSubmissionJob::dispatch($request->toDTO());
 
         return response()->json(['message' => 'Submission queued for processing'], 200);
     }
