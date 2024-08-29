@@ -22,4 +22,18 @@ class SubmissionTest extends TestCase
                 'message' => 'Submission queued for processing',
             ]);
     }
+
+    public function test_submission_validation()
+    {
+        $response = $this->postJson(route('submit'), [
+            'name' => '',
+            'email' => 'not-an-email',
+            'message' => ''
+        ]);
+
+        $response->assertStatus(422)
+            ->assertJsonStructure([
+                'errors' => ['name', 'email', 'message']
+            ]);
+    }
 }
