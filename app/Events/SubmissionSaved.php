@@ -2,7 +2,7 @@
 
 namespace App\Events;
 
-use App\Models\Submission;
+use App\DTOs\SubmissionDTO;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
@@ -11,10 +11,7 @@ class SubmissionSaved
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public Submission $submission;
-
-    public function __construct(Submission $submission)
+    public function __construct(public SubmissionDTO $submissionDTO)
     {
-        $this->submission = $submission;
     }
 }

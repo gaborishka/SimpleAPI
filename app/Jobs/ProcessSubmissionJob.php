@@ -3,8 +3,8 @@
 namespace App\Jobs;
 
 use App\DTOs\SubmissionDTO;
-use App\Models\Submission;
 use App\Events\SubmissionSaved;
+use App\Repositories\Interfaces\SubmissionRepository;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -15,20 +15,17 @@ class ProcessSubmissionJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    protected SubmissionDTO $submissionDTO;
-
-    public function __construct(SubmissionDTO $submissionDTO)
+    public function __construct(
+        protected SubmissionDTO        $submissionDTO,
+        protected SubmissionRepository $submissionRepository
+    )
     {
-        $this->submissionDTO = $submissionDTO;
+
     }
 
     public function handle(): void
     {
-        $submission = Submission::create([
-            'name'    => $this->submissionDTO->name,
-            'email'   => $this->submissionDTO->email,
-            'message' => $this->submissionDTO->message,
-        ]);
+        $submission = $this->submissionRepository->create($this->submissionDTO);
 
         event(new SubmissionSaved($submission));
     }
