@@ -10,7 +10,9 @@ class LogSubmissionSaved implements ShouldQueue
 {
     public function handle(SubmissionSaved $event): void
     {
-        $submission = $event->submission;
-        Log::info('Submission saved: ', ['name' => $submission->name, 'email' => $submission->email]);
+        Log::info('Submission saved: ', [
+            'name' => $event->submissionDTO->name,
+            'email' => $event->submissionDTO->email
+        ]);
     }
 }

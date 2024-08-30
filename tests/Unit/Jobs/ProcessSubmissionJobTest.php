@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit;
+namespace Tests\Unit\Jobs;
 
 use App\DTOs\SubmissionDTO;
 use App\Events\SubmissionSaved;
@@ -21,7 +21,7 @@ class ProcessSubmissionJobTest extends TestCase
             'Hello World'
         );
 
-        $job = new ProcessSubmissionJob($submissionDTO);
+        $job = app(ProcessSubmissionJob::class, ['submissionDTO' => $submissionDTO]);
 
         Event::fake();
 
@@ -39,7 +39,7 @@ class ProcessSubmissionJobTest extends TestCase
     public function test_submission_with_empty_fields()
     {
         $submissionDTO = new SubmissionDTO('', '', '');
-        $job = new ProcessSubmissionJob($submissionDTO);
+        $job = app(ProcessSubmissionJob::class, ['submissionDTO' => $submissionDTO]);
 
         Event::fake();
 
